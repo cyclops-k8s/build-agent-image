@@ -8,59 +8,65 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update package list and install all required system packages
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    bash \
-    jq \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
     apt-transport-https \
+    bash \
     ca-certificates \
+    jq \
     gnupg \
     lsb-release \
-    software-properties-common \
+    pipx \
     python3 \
-    python3-pip \
-    python3-venv \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install .NET SDK
-# Note: Installing .NET 10 SDK as requested. If .NET 10 is not yet available, the script will fail.
-# In that case, change channel to 9.0 or 8.0 for the latest available LTS version.
-RUN curl -fsSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh \
-    && chmod +x dotnet-install.sh \
-    && ./dotnet-install.sh --channel 10.0 --install-dir /usr/share/dotnet \
-    && rm dotnet-install.sh \
-    && ln -sf /usr/share/dotnet/dotnet /usr/bin/dotnet
+    software-properties-common \
+    wget \
+    yq
+    # Dont clean up the cache so installing packages in the builds go faster by not needing to redownload package lists
+    # && rm -rf /var/lib/apt/lists/*
 
 # Install kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
     && rm kubectl
 
-# Install yq
-RUN curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
-    && chmod +x /usr/bin/yq
+# Install Kustomize
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash \
+    && mv kustomize /usr/local/bin/kustomize \
+    && chmod +x /usr/local/bin/kustomize
+
+# Install Helm v3
+RUN curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# Install OpenTofu
+RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh \
+    && chmod +x install-opentofu.sh \
+    && ./install-opentofu.sh --install-method standalone \
+    && rm install-opentofu.sh
 
 # Verify system tools installations (before switching to runner user)
 RUN echo "=== Verifying system tools ===" \
-    && curl --version \
     && wget --version | head -1 \
     && bash --version | head -1 \
-    && dotnet --version \
     && kubectl version --client=true \
+    && kustomize version \
+    && helm version \
+    && tofu --version \
     && jq --version \
     && yq --version
 
 # Switch back to runner user for ansible installation
 USER runner
 
-# Install pipx and ansible as runner user in ~/.local directory
-RUN pip3 install --break-system-packages pipx \
-    && /home/runner/.local/bin/pipx install ansible \
-    && /home/runner/.local/bin/pipx ensurepath
-
-# Update PATH to include pipx binaries for runner user
+# Set pipx environment variables to ensure it uses /home/runner/.local
+ENV PIPX_HOME="/home/runner/.local/pipx"
+ENV PIPX_BIN_DIR="/home/runner/.local/bin"
 ENV PATH="/home/runner/.local/bin:${PATH}"
+
+# Install pipx and ansible as runner user in ~/.local directory
+RUN pipx install --include-deps ansible \
+    && pipx ensurepath \
+    && pipx inject ansible dnspython
 
 # Verify ansible installation
 RUN ansible --version

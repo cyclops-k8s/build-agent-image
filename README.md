@@ -49,6 +49,37 @@ jobs:
       # Your build steps here
 ```
 
+## Development Container
+
+This repository includes a devcontainer configuration for local development with VS Code.
+
+### Requirements
+
+- **Docker**: Docker must be installed and running on your host machine
+- **Docker Socket**: The devcontainer requires access to `/var/run/docker.sock` on the host
+  - **Linux**: Default location is `/var/run/docker.sock`
+  - **macOS**: Default location is `/var/run/docker.sock` (created by Docker Desktop)
+  - **Windows**: If using WSL2, Docker Desktop creates the socket at `/var/run/docker.sock` in WSL2
+- **VS Code**: Visual Studio Code with the Dev Containers extension
+
+### Included VS Code Extensions
+
+The devcontainer automatically installs:
+- Docker (Microsoft)
+- GitHub Pull Requests and Issues
+- GitHub Copilot
+- GitHub Copilot Chat
+- GitHub Actions
+
+### Usage
+
+1. Open the repository in VS Code
+2. When prompted, click "Reopen in Container" (or use Command Palette: "Dev Containers: Reopen in Container")
+3. The devcontainer will build and start with access to your host's Docker daemon
+4. You can now build and run Docker images from within the container using the host's Docker
+
+**Note**: The devcontainer uses Docker-outside-of-Docker (DooD), meaning it shares the host's Docker daemon rather than running Docker-in-Docker. This is more efficient and allows you to build images that persist on your host system.
+
 ## Manual Build
 
 To build the image locally:
