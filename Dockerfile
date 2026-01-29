@@ -11,19 +11,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
-    apt-transport-https \
-    bash \
-    ca-certificates \
-    jq \
-    gnupg \
-    lsb-release \
-    pipx \
-    python3 \
-    software-properties-common \
-    wget \
-    yq
-    # Dont clean up the cache so installing packages in the builds go faster by not needing to redownload package lists
-    # && rm -rf /var/lib/apt/lists/*
+        apt-transport-https \
+        bash \
+        ca-certificates \
+        jq \
+        gnupg \
+        lsb-release \
+        pipx \
+        python3 \
+        software-properties-common \
+        wget \
+        yq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
@@ -65,7 +64,6 @@ ENV PATH="/home/runner/.local/bin:${PATH}"
 
 # Install pipx and ansible as runner user in ~/.local directory
 RUN pipx install --include-deps ansible \
-    && pipx ensurepath \
     && pipx inject ansible dnspython
 
 # Verify ansible installation
