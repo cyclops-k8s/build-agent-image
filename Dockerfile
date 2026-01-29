@@ -27,8 +27,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     python3-venv \
     && rm -rf /var/lib/apt/lists/* \
-    && pip3 install --break-system-packages --trusted-host pypi.org --trusted-host files.pythonhosted.org pipx \
-    && pipx install ansible --pip-args="--trusted-host pypi.org --trusted-host files.pythonhosted.org"
+    && pip3 install --break-system-packages pipx \
+    && pipx install ansible
 
 # Update PATH to include pipx binaries
 ENV PATH="/root/.local/bin:${PATH}"
