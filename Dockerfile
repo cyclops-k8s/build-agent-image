@@ -7,7 +7,7 @@ USER root
 # Set up non-interactive mode for apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update package list and install base tools
+# Update package list and install all required system packages
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -18,20 +18,10 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release \
     software-properties-common \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Ansible using pipx (modern, isolated installation)
-# pipx will use default ~/.local directory
-RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip3 install --break-system-packages pipx \
-    && pipx install ansible
-
-# Update PATH to include pipx binaries
-ENV PATH="/root/.local/bin:${PATH}"
+    && rm -rf /var/lib/apt/lists/*
 
 # Install .NET SDK
 # Note: Installing .NET 10 SDK as requested. If .NET 10 is not yet available, the script will fail.
@@ -51,19 +41,29 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN curl -fsSL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/bin/yq \
     && chmod +x /usr/bin/yq
 
-# Verify installations
-RUN echo "=== Verifying installations ===" \
+# Verify system tools installations (before switching to runner user)
+RUN echo "=== Verifying system tools ===" \
     && curl --version \
     && wget --version | head -1 \
     && bash --version | head -1 \
-    && ansible --version | head -1 \
     && dotnet --version \
     && kubectl version --client=true \
     && jq --version \
     && yq --version
 
+# Switch back to runner user for ansible installation
+USER runner
+
+# Install pipx and ansible as runner user in ~/.local directory
+RUN pip3 install --break-system-packages pipx \
+    && /home/runner/.local/bin/pipx install ansible \
+    && /home/runner/.local/bin/pipx ensurepath
+
+# Update PATH to include pipx binaries for runner user
+ENV PATH="/home/runner/.local/bin:${PATH}"
+
+# Verify ansible installation
+RUN ansible --version
+
 # Reset DEBIAN_FRONTEND
 ENV DEBIAN_FRONTEND=
-
-# Switch back to runner user for security
-USER runner

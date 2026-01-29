@@ -9,10 +9,10 @@ This repository contains a Dockerfile based on the upstream GitHub Actions Runne
 ## Included Tools
 
 - **Base**: GitHub Actions Runner Controller image
-- **Package Managers & Scripting**: ansible, bash, python3
+- **Package Managers & Scripting**: ansible (via pipx), bash, python3
 - **Utilities**: curl, wget, jq, yq
 - **Kubernetes**: kubectl
-- **.NET**: .NET SDK (latest available version)
+- **.NET**: .NET 10 SDK (if available, otherwise falls back to latest LTS version)
 
 ## Automated Builds
 
