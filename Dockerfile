@@ -43,17 +43,6 @@ RUN curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.
     && ./install-opentofu.sh --install-method standalone \
     && rm install-opentofu.sh
 
-# Verify system tools installations (before switching to runner user)
-RUN echo "=== Verifying system tools ===" \
-    && wget --version | head -1 \
-    && bash --version | head -1 \
-    && kubectl version --client=true \
-    && kustomize version \
-    && helm version \
-    && tofu --version \
-    && jq --version \
-    && yq --version
-
 # Switch back to runner user for ansible installation
 USER runner
 
@@ -66,8 +55,14 @@ ENV PATH="/home/runner/.local/bin:${PATH}"
 RUN pipx install --include-deps ansible \
     && pipx inject ansible dnspython
 
-# Verify ansible installation
-RUN ansible --version
+# Verify the runner user can execute expected tools
+RUN echo "=== Verifying tools ===" \
+    && sudo -n true \
+    && kubectl version --client=true \
+    && kustomize version \
+    && helm version \
+    && tofu --version \
+    && ansible --version
 
 # Reset DEBIAN_FRONTEND
 ENV DEBIAN_FRONTEND=
