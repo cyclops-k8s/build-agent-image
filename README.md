@@ -12,13 +12,12 @@ This repository contains a Dockerfile based on the upstream GitHub Actions Runne
 - **Package Managers & Scripting**: ansible (via pipx), bash, python3
 - **Utilities**: curl, wget, jq, yq
 - **Kubernetes**: kubectl
-- **.NET**: .NET 10 SDK (if available, otherwise falls back to latest LTS version)
 
 ## Automated Builds
 
 The Docker image is automatically rebuilt weekly via GitHub Actions:
 - **Schedule**: Every Sunday at 00:00 UTC
-- **Registry**: `ghcr.io/cyclops-k8s/build-agent-image`
+- **Registry**: `quay.io/cyclops-k8s/build-agent-image`
 - **Tags**: 
   - `latest` - most recent build
   - `YYYY-MM-DD` - date-tagged builds
@@ -34,7 +33,7 @@ The workflow includes an automatic keepalive mechanism:
 
 Pull the latest image:
 ```bash
-docker pull ghcr.io/cyclops-k8s/build-agent-image:latest
+docker pull quay.io/cyclops-k8s/build-agent-image:latest
 ```
 
 Use in GitHub Actions workflows:
@@ -43,7 +42,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/cyclops-k8s/build-agent-image:latest
+      image: quay.io/cyclops-k8s/build-agent-image:latest
     steps:
       - uses: actions/checkout@v4
       # Your build steps here
