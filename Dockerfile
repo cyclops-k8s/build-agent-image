@@ -53,10 +53,10 @@ ENV PATH="/home/runner/.local/bin:${PATH}"
 
 # Install pipx and ansible as runner user in ~/.local directory
 RUN pipx install --include-deps ansible \
-    && pipx inject --include-apps ansible-core dnspython \
-    && pipx inject --include-apps ansible-core jmespath \
-    && pipx inject --include-apps ansible-core netaddr \
-    && pipx inject --include-apps --include-deps ansible-core requests
+    && pipx inject --include-apps ansible dnspython \
+    && pipx inject --include-apps ansible jmespath \
+    && pipx inject --include-apps ansible netaddr \
+    && pipx inject --include-apps --include-deps ansible requests
 
 # Install ansible modules
 COPY requirements.yaml .
