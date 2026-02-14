@@ -53,7 +53,15 @@ ENV PATH="/home/runner/.local/bin:${PATH}"
 
 # Install pipx and ansible as runner user in ~/.local directory
 RUN pipx install --include-deps ansible \
-    && pipx inject ansible dnspython
+    && pipx inject --include-apps ansible-core dnspython \
+    && pipx inject --include-apps ansible-core jmespath \
+    && pipx inject --include-apps ansible-core netaddr \
+    && pipx inject --include-apps --include-deps ansible-core requests
+
+# Install ansible modules
+COPY requirements.yaml .
+RUN ansible-galaxy collection install -r requirements.yaml \
+    && rm requirements.yaml
 
 # Verify the runner user can execute expected tools
 RUN echo "=== Verifying tools ===" \
