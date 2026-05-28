@@ -15,8 +15,7 @@ on:
 
 jobs:
   keepalive-and-build:
-    runs-on:
-      group: Default
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
