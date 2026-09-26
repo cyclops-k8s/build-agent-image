@@ -22,4 +22,5 @@ vulnerabilities:
 - id: CVE-2026-59873
   paths:
   - home/runner/externals/node20/lib/node_modules/npm/node_modules/tar/package.json
+  - home/runner/externals/node24/lib/node_modules/npm/node_modules/tar/package.json
   statement: The base container needs to update their dependencies.
