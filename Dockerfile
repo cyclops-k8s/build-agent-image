@@ -21,15 +21,15 @@ RUN apt-get update \
         wget \
         yq \
     && rm -rf /var/lib/apt/lists/* \
-    # Install kubectl
+    && echo "=== Installing kubectl ===" \
     && curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
     && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
     && rm kubectl \
-    # Install Kustomize
+    && echo "=== Installing Kustomize ===" \
     && curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s /usr/local/bin \
-    # Install Helm
+    && echo "=== Installing Helm ===" \
     && curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash \
-    # Install OpenTofu
+    && echo "=== Installing OpenTofu ===" \
     && curl -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh \
     && chmod +x install-opentofu.sh \
     && ./install-opentofu.sh --install-method standalone \
@@ -53,10 +53,9 @@ RUN pipx install --include-deps ansible \
     && pipx inject --include-apps ansible netaddr \
     && pipx inject --include-apps --include-deps ansible requests \
     && rm -rf /home/runner/.cache/pip \
-    # Install ansible modules
+    && echo "=== Installing ansible modules ===" \
     && ansible-galaxy collection install -r requirements.yaml \
     && rm requirements.yaml \
-    # Verify the runner user can execute expected tools
     && echo "=== Verifying tools ===" \
     && sudo -n true \
     && kubectl version --client=true \
