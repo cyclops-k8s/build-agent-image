@@ -4,14 +4,14 @@
 misconfigurations:
 - id: AVD-DS-0011
   paths:
-  - home/runner/.local/share/pipx/venvs/ansible/lib/python3.14/site-packages/ansible/galaxy/data/apb/Dockerfile.j2
+  - home/runner/.local/pipx/venvs/ansible/lib/python3.12/site-packages/ansible/galaxy/data/apb/Dockerfile.j2
   statement: This Dockerfile.j2 file is installed with pipx.
 
 secrets:
 - id: aws-access-key-id
   paths:
-  - /home/runner/.local/share/pipx/venvs/ansible/lib/python3.14/site-packages/ansible_collections/community/aws/plugins/modules/__pycache__/sts_session_token.cpython-314.pyc
-  - /home/runner/.local/share/pipx/venvs/ansible/lib/python3.14/site-packages/ansible_collections/community/aws/plugins/modules/sts_session_token.py
+  - /home/runner/.local/pipx/venvs/ansible/lib/python3.12/site-packages/ansible_collections/community/aws/plugins/modules/__pycache__/sts_session_token.cpython-312.pyc
+  - /home/runner/.local/pipx/venvs/ansible/lib/python3.12/site-packages/ansible_collections/community/aws/plugins/modules/sts_session_token.py
   statement: These are false positives.
 
 vulnerabilities:
@@ -21,5 +21,5 @@ vulnerabilities:
   statement: The kustomize project needs to update their dependencies.
 - id: CVE-2026-59873
   paths:
-  - home/runner/externals/node24/lib/node_modules/npm/node_modules/tar/package.json
+  - home/runner/externals/node20/lib/node_modules/npm/node_modules/tar/package.json
   statement: The base container needs to update their dependencies.
