@@ -1,5 +1,5 @@
 collections:
-- name: cloud.terraform
-- name: community.general
 - name: ansible.posix
+- name: cloud.terraform
 - name: community.dns
+- name: community.general

@@ -18,6 +18,7 @@ This repository contains a Dockerfile based on the upstream GitHub Actions Runne
 ## Automated Builds
 
 The Docker image is automatically rebuilt weekly via GitHub Actions:
+
 - **Schedule**: Every Sunday at 00:00 UTC
 - **Registry**: `quay.io/cyclops-k8s/build-agent-image`
 - **Tags**: 
@@ -28,17 +29,20 @@ The Docker image is automatically rebuilt weekly via GitHub Actions:
 ### Keepalive Mechanism
 
 The workflow includes an automatic keepalive mechanism:
+
 - If no commits have been made in the last 30 days, the workflow automatically creates a keepalive commit
 - This ensures the weekly cron job remains active and the image stays up-to-date
 
 ## Usage
 
 Pull the latest image:
+
 ```bash
 docker pull quay.io/cyclops-k8s/build-agent-image:latest
 ```
 
 Use in GitHub Actions workflows:
+
 ```yaml
 jobs:
   build:
@@ -66,6 +70,7 @@ This repository includes a devcontainer configuration for local development with
 ### Included VS Code Extensions
 
 The devcontainer automatically installs:
+
 - Docker (Microsoft)
 - GitHub Pull Requests and Issues
 - GitHub Copilot
@@ -84,6 +89,7 @@ The devcontainer automatically installs:
 ## Manual Build
 
 To build the image locally:
+
 ```bash
 docker build -t build-agent-image .
 ```
