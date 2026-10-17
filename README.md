@@ -1,4 +1,4 @@
-[![Build and Keepalive](https://github.com/cyclops-k8s/build-agent-image/actions/workflows/weekly-build.yml/badge.svg)](https://github.com/cyclops-k8s/build-agent-image/actions/workflows/weekly-build.yml)
+[![Build and Keepalive](https://github.com/cyclops-k8s/build-agent-image/actions/workflows/build-container.yaml/badge.svg)](https://github.com/cyclops-k8s/build-agent-image/actions/workflows/build-container.yaml)
 
 # build-agent-image
 
